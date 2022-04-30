@@ -8,6 +8,8 @@ namespace Agora
 {
   public class InAppChat : MonoBehaviour
   {
+    [SerializeField] private bool AudioSourceSolution;
+    
     [SerializeField] private Button join;
     [SerializeField] private Button leave;
     [SerializeField] private TMP_InputField room;
@@ -39,7 +41,12 @@ namespace Agora
       _rtcModule.LoadEngine();
       
       _rtcModule.StartObservation();
-      _audioChat.SurroundSoundObservation(_rtcModule.AgoraEngine);
+      
+      if (AudioSourceSolution)
+        _audioChat.AudioSourceObservation(_rtcModule.AgoraEngine);
+      else
+        _audioChat.SurroundSoundObservation(_rtcModule.AgoraEngine);
+      
       _lobby.StartObservation(_rtcModule.AgoraEngine);
       
       _lobby.Enter(room.text);
@@ -80,11 +87,12 @@ namespace Agora
 
     private void Update()
     {
-      // Agora's built-in solution
-      _audioChat.UpdateSurroundAudio(player);
-     
+      if (AudioSourceSolution)
       // AudioSource solution
-      //_audioChat.UpdateAudioClips();
+        _audioChat.UpdateAudioClips();
+      else
+      // Agora's built-in solution
+        _audioChat.UpdateSurroundAudio(player);
     }
 
     private void OnDestroy()
