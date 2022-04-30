@@ -20,21 +20,21 @@ namespace Agora
     private const int TicksThreeHold = 5;
     private static readonly object Locker = new object();
 
-    private VoiceParticipant _player;
+    public VoiceParticipant Player { get; set; }
 
-    public void Start(VoiceParticipant player, IRtcEngine engine)
+    public void StartObservation(IRtcEngine engine)
     {
       _engine = engine;
-      _player = player;
-      
       
       _audioRawManager = _engine.GetAudioRawDataManager();
       
+      // Just to not hear myself twice during testing
       _engine.MuteLocalAudioStream(true);
-      _audioRawManager.RegisterAudioRawDataObserver();
       
+      // Required both in order to have spatial effect control
+      _audioRawManager.RegisterAudioRawDataObserver();
       _engine.SetParameter("che.audio.external_render", true);
-
+      
       _audioRawManager.SetOnPlaybackAudioFrameBeforeMixingCallback(RemoteUserAudioFrameReceived);
     }
 

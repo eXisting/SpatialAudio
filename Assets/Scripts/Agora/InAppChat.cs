@@ -26,29 +26,30 @@ namespace Agora
       room.text = Guid.NewGuid().ToString();
       
       _lobby.RemoteUserConnected += InstantiateParticipant;
-      _lobby.SuccessfulyJoined += StartVoiceChat;
+      _lobby.SuccessfulyJoined += CaptureAgoraPlayer;
     }
 
-    public void JoinRoom()
+    private void JoinRoom()
     {
       _rtcModule.LoadEngine();
-      _rtcModule.StartObservation();
       
+      _rtcModule.StartObservation();
+      _audioChat.StartObservation(_rtcModule.AgoraEngine);
       _lobby.StartObservation(_rtcModule.AgoraEngine);
+      
       _lobby.Enter(room.text);
     }
 
-    public void LeaveRoom()
+    private void LeaveRoom()
     {
       _rtcModule.AgoraEngine?.LeaveChannel();
       _audioChat.Shutdown();
     }
     
-    private void StartVoiceChat(uint currentUserAgoraId)
+    private void CaptureAgoraPlayer(uint currentUserAgoraId)
     {
       player.name = $"ME_{currentUserAgoraId}";
-      
-      _audioChat.Start(new VoiceParticipant(currentUserAgoraId, player), _rtcModule.AgoraEngine);
+      _audioChat.Player = new VoiceParticipant(currentUserAgoraId, player);
     }
 
     private GameObject InstantiateParticipant(uint id)
@@ -77,6 +78,9 @@ namespace Agora
       
       join.onClick.RemoveAllListeners();
       leave.onClick.RemoveAllListeners();
+      
+      _lobby.RemoteUserConnected -= InstantiateParticipant;
+      _lobby.SuccessfulyJoined -= CaptureAgoraPlayer;
     }
   }
 }

@@ -33,6 +33,8 @@ public class UserAudioFrameHandler : MonoBehaviour {
 		{
 			audioSource = gameObject.AddComponent<AudioSource>();
 	    }
+
+        audioSource.spatialBlend = 1;
         _userAudioFrameDelegate.HandleAudioFrameForUser += HandleAudioFrame;
         SetupAudio(audioSource, "clip_for_" + UID);
     }
