@@ -18,8 +18,8 @@ namespace Agora
 
     // Note, it expires in 24 hours
     private string _token =
-      "006516e711a0d394e938025a741fffe2301IAD2E426np3twgXpSUWoB/OkEA/Q3BZ3BQRHa0RWVDeCJKHYMoUAAAAAEABD/MfDiQptYgEAAQCJCm1i";
-    private string _channel = "TestChannel";
+      "006516e711a0d394e938025a741fffe2301IADn7if6HOjxJ3bm+eN0ZHPrlyMpMfTpzPgVxlBkfy/P1N7YvmgAAAAAEABD/MfDH3RuYgEAAQAfdG5i";
+    private string _channel = "30april";
     
     public void StartObservation(IRtcEngine engine)
     {
