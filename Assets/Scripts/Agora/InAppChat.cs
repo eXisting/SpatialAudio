@@ -18,6 +18,8 @@ namespace Agora
     private readonly AudioChat _audioChat = new AudioChat();
     private readonly Lobby _lobby = new Lobby();
 
+    private bool _inCall;
+
     private void Awake()
     {
       join.onClick.AddListener(JoinRoom);
@@ -31,6 +33,9 @@ namespace Agora
 
     private void JoinRoom()
     {
+      if (_inCall)
+        return;
+      
       _rtcModule.LoadEngine();
       
       _rtcModule.StartObservation();
@@ -44,9 +49,16 @@ namespace Agora
     {
       _rtcModule.AgoraEngine?.LeaveChannel();
       _audioChat.Shutdown();
+
+      _inCall = false;
     }
     
-    private void CaptureAgoraPlayer(uint currentUserAgoraId) => player.name = $"ME_{currentUserAgoraId}";
+    private void CaptureAgoraPlayer(uint currentUserAgoraId)
+    {
+      player.name = $"ME_{currentUserAgoraId}";
+
+      _inCall = true;
+    }
 
     private GameObject InstantiateParticipant(uint id)
     {
