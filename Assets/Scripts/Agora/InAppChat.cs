@@ -34,7 +34,7 @@ namespace Agora
       _rtcModule.LoadEngine();
       
       _rtcModule.StartObservation();
-      _audioChat.StartObservation(_rtcModule.AgoraEngine);
+      _audioChat.SurroundSoundObservation(_rtcModule.AgoraEngine);
       _lobby.StartObservation(_rtcModule.AgoraEngine);
       
       _lobby.Enter(room.text);
@@ -46,11 +46,7 @@ namespace Agora
       _audioChat.Shutdown();
     }
     
-    private void CaptureAgoraPlayer(uint currentUserAgoraId)
-    {
-      player.name = $"ME_{currentUserAgoraId}";
-      _audioChat.Player = new VoiceParticipant(currentUserAgoraId, player);
-    }
+    private void CaptureAgoraPlayer(uint currentUserAgoraId) => player.name = $"ME_{currentUserAgoraId}";
 
     private GameObject InstantiateParticipant(uint id)
     {
@@ -66,11 +62,18 @@ namespace Agora
 
       var voiceParticipant = new VoiceParticipant(id, worldObject);
       _audioChat.AddParticipant(voiceParticipant);
-      
+
       return worldObject;
     }
 
-    private void Update() => _audioChat.UpdateSpatialAudio();
+    private void Update()
+    {
+      // Agora's built-in solution
+      _audioChat.UpdateSurroundAudio(player);
+     
+      // AudioSource solution
+      //_audioChat.UpdateAudioClips();
+    }
 
     private void OnDestroy()
     {

@@ -26,22 +26,31 @@ namespace Agora
       _engine = engine;
       
       _engine.OnJoinChannelSuccess += JoinedChannelSuccessfully;
+      _engine.OnLeaveChannel += UserLeft;
       _engine.OnUserOffline += RemoteUserLeft;
       _engine.OnUserJoined += RemoteUserJoined;
       _engine.OnConnectionStateChanged += CaptureConnectionStateChange;
     }
 
-    public void Enter(string roomId)
-    {
-      _engine.JoinChannelByKey(_token, _channel, null);
-    }
+    public void Enter(string roomId) => _engine.JoinChannelByKey(_token, _channel, null);
 
+    private void UserLeft(RtcStats stats)
+    {
+      Debug.Log($"Current user left the session: {stats.duration}");
+
+      foreach (var participant in _participants) 
+        Object.Destroy(participant.Value);
+      
+      _participants.Clear();
+    }
+    
     private void RemoteUserLeft(uint uid, USER_OFFLINE_REASON reason)
     {
       Debug.Log($"User is offline: {uid} {reason}");
 
       var participant = _participants[uid];
       Object.Destroy(participant);
+      _participants.Remove(uid);
       
       RemoteUserDropped?.Invoke(uid);
     }
@@ -63,6 +72,5 @@ namespace Agora
 
     private void CaptureConnectionStateChange(CONNECTION_STATE_TYPE state, CONNECTION_CHANGED_REASON_TYPE reason)
       => Debug.Log($"Agora: connection with server changed, state:{state} reason:{reason}");
-
   }
 }

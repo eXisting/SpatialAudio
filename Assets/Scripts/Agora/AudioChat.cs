@@ -20,12 +20,26 @@ namespace Agora
     private const int TicksThreeHold = 5;
     private static readonly object Locker = new object();
 
-    public VoiceParticipant Player { get; set; }
+    private SurroundSound.SurroundSound _surroundSound;
 
-    public void StartObservation(IRtcEngine engine)
+    public void SurroundSoundObservation(IRtcEngine engine)
     {
       _engine = engine;
+
+      _surroundSound = new SurroundSound.SurroundSound(_engine);
+      _audioRawManager = _engine.GetAudioRawDataManager();
       
+      // Just to not hear myself twice during testing
+      _engine.MuteLocalAudioStream(true);
+
+      // Enable spatial audio
+      _engine.EnableSoundPositionIndication(true);
+    }
+    
+    public void AudioSourceObservation(IRtcEngine engine)
+    {
+      _engine = engine;
+
       _audioRawManager = _engine.GetAudioRawDataManager();
       
       // Just to not hear myself twice during testing
@@ -40,10 +54,21 @@ namespace Agora
 
     public void AddParticipant(VoiceParticipant participant) => _participants[participant.Id] = participant;
 
-    public void UpdateSpatialAudio()
+    public void UpdateAudioClips()
     {
       if (_dispatchItems.Count > 0)
         _dispatchItems.Pop().Invoke();
+    }
+    
+    public void UpdateSurroundAudio(GameObject player)
+    {
+      if (_surroundSound == null)
+        return;
+      
+      _surroundSound.PlayerPosition = player.transform.position;
+
+      foreach (var participant in _participants) 
+        _surroundSound.UpdateSpatialAudio(participant.Key, participant.Value);
     }
     
     public void Shutdown()
