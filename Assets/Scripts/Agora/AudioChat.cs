@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using agora_gaming_rtc;
+using Agora.AudioSource;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Agora
 {
@@ -98,10 +100,10 @@ namespace Agora
           if (go != null)
             DispatchOnMainThread(() =>
             {
-              var userAudio = go.GetComponent<UserAudioFrameHandler>();
+              var userAudio = go.GetComponent<AgoraAudioSource>();
               if (userAudio != null) return;
               
-              userAudio = go.AddComponent<UserAudioFrameHandler>();
+              userAudio = go.AddComponent<AgoraAudioSource>();
               userAudio.Init(uid, this, audioFrame);
               _remoteUserConfigured.Add(uid);
             });
@@ -109,7 +111,7 @@ namespace Agora
             DispatchOnMainThread(() => { Debug.Log($"Uid: {uid} not found"); });
         }
       }
-
+      
       HandleAudioFrameForUser?.Invoke(uid, audioFrame);
     }
 
