@@ -1,8 +1,8 @@
+// Taken from https://github.com/dave-hillier/disruptor-unity3d
+
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-
-// Taken from https://github.com/dave-hillier/disruptor-unity3d
 
 namespace Agora.AudioSource
 {

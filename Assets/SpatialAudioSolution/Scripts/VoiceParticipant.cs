@@ -1,3 +1,5 @@
+// Copyright - SpatialSystems 2022
+
 using UnityEngine;
 
 namespace Agora

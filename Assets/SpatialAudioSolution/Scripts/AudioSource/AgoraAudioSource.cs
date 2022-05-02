@@ -1,3 +1,5 @@
+// Modified solution of of the files in https://apprtcio-my.sharepoint.com/:u:/g/personal/rick_agora_io/Ecy_II5vwjZPm5FoSwmT2DABqh5MXkX7XLcEMPNvM3_UQQ?e=Gq2w9d
+
 using System;
 using agora_gaming_rtc;
 using UnityEngine;

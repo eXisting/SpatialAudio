@@ -1,3 +1,5 @@
+// Copyright - SpatialSystems 2022
+
 using System;
 using System.Collections.Generic;
 using agora_gaming_rtc;
